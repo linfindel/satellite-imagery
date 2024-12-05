@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Satellite Imagery</title>
 
   <link rel="stylesheet" href="main.css">
 
@@ -17,8 +17,10 @@
 <body>
   <div id="map"></div>
 
-  <div id="attribution">
-    <p>Imagery from Esri</p>
+  <div class="bottom-row">
+    <div id="reset" onclick="localStorage.clear(); location.reload()">Reset data</div>
+
+    <div id="attribution">Imagery from Esri</div>
   </div>
 
   <script src="script.js"></script>

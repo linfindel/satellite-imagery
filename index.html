@@ -15,7 +15,9 @@
   crossorigin=""></script>
 </head>
 <body>
-  <div id="map"></div>
+  <div id="map">
+    <h1 style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: -2; color: black;">Loading imagery...</h1>
+  </div>
 
   <div class="bottom-row">
     <div id="reset" onclick="localStorage.clear(); location.reload()">Reset data</div>

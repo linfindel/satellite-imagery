@@ -146,3 +146,48 @@ function setImagery(imagery) {
 
   localStorage.setItem("imagery", imagery)
 }
+
+document.addEventListener("keyup", (e) => {
+  e.preventDefault();
+  e.key = e.key.toLowerCase();
+
+  if(e.key == " "){
+    screenshotMode();
+  }    
+})
+
+function screenshotMode() {
+  if (document.getElementById("bottom-row").style.opacity == 1) {
+    document.getElementById("bottom-row").style.opacity = 0;
+    document.body.requestPointerLock();
+
+    setPointerEvents("none");
+
+    const popup = document.createElement("div");
+    popup.className = "card centre";
+    popup.innerHTML = "<p>Press Space to exit screenshot mode</p>";
+    popup.style.opacity = "0";
+    popup.style.transition = "0.25s ease";
+
+    document.body.appendChild(popup);
+
+    setTimeout(() => {
+      popup.style.opacity = "1";
+    });
+
+    setTimeout(() => {
+      popup.style.opacity = "0";
+
+      setTimeout(() => {
+        popup.remove();
+      }, 250);
+    }, 2000);
+  }
+
+  else {
+    document.getElementById("bottom-row").style.opacity = 1;
+    document.exitPointerLock();
+
+    setPointerEvents("all");
+  }
+}

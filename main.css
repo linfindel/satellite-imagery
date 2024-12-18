@@ -27,11 +27,71 @@ body {
   display: none;
 }
 
+.card {
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
+
+  border-radius: 12px;
+
+  padding: 1rem;
+}
+
+button {
+  background-color: rgba(0, 0, 0, 0.25);
+
+  border: none;
+  border-radius: 12px;
+
+  padding: 1rem;
+}
+
+button:hover, .interactive:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.sidebar {
+  background-color: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(5px);
+
+  padding: 1rem;
+
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 17rem;
+  height: calc(100vh - 2rem);
+}
+
+.row {
+  align-items: center;
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.centre {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
 .bottom-row {
   align-items: center;
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: 0.5rem;
   justify-content: center;
 
   margin: 1rem;
@@ -39,21 +99,4 @@ body {
   position: absolute;
   bottom: 0;
   right: 0;
-}
-
-#attribution, #reset {
-  background-color: rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(5px);
-
-  border-radius: 12px;
-
-  padding: 1rem;
-
-  transition: 0.25s ease;
-}
-
-#reset:hover {
-  background-color: rgba(0, 0, 0, 0.5);
-
-  cursor: pointer;
 }

@@ -4,17 +4,40 @@ const imagerySources = {
 }
 
 const locationSelection = [
-  [-3.309120512165984,-60.220870971679695]
+  [-3.309120512165984,-60.220870971679695],
+  [21.152716314425867,-11.393508911132812],
+  [21.934884992425484,89.40656661987306],
+  [-6.6156712302649225,142.85076141357425],
+  [-25.45074229846076,152.93979559923332],
+  [21.626767700868484,276.8094420433045],
+  [55.345574754808545,358.3884376528723],
+  [40.82087324226509,374.4262504577637],
+  [26.174542758741925,416.3131713867188],
+  [38.988447785159956,485.71537256240845]
+]
+
+const zooms = [
+  14,
+  11,
+  14,
+  12,
+  14,
+  17,
+  17,
+  15,
+  10,
+  17
 ]
 
 let savedLocation = localStorage.getItem("location");
 if (savedLocation != null) {
   savedLocation = savedLocation.split(",");
   savedLocation = [Number(savedLocation[0]), Number(savedLocation[1])];
-  console.log(savedLocation);
 }
 
-const map = L.map('map').setView(savedLocation || [-3.309120512165984,-60.220870971679695], localStorage.getItem("zoom") || 14);
+const randomLocationID = Math.floor(Math.random() * locationSelection.length);
+
+const map = L.map('map').setView(savedLocation || locationSelection[randomLocationID], localStorage.getItem("zoom") || zooms[randomLocationID] || 14);
 L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
   maxZoom: 22,
 }).addTo(map);

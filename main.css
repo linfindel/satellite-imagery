@@ -63,8 +63,11 @@ button:hover, .interactive:hover {
   top: 0;
   left: 0;
 
-  width: 17rem;
   height: calc(100vh - 2rem);
+}
+
+.sidebar button {
+  width: 17rem;
 }
 
 .row {

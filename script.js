@@ -159,7 +159,6 @@ document.addEventListener("keyup", (e) => {
 function screenshotMode() {
   if (document.getElementById("bottom-row").style.opacity == 1) {
     document.getElementById("bottom-row").style.opacity = 0;
-    document.body.requestPointerLock();
 
     setPointerEvents("none");
 
@@ -186,7 +185,6 @@ function screenshotMode() {
 
   else {
     document.getElementById("bottom-row").style.opacity = 1;
-    document.exitPointerLock();
 
     setPointerEvents("all");
   }

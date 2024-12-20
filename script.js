@@ -13,7 +13,16 @@ const locationSelection = [
   [55.345574754808545,358.3884376528723],
   [40.82087324226509,374.4262504577637],
   [26.174542758741925,416.3131713867188],
-  [38.988447785159956,485.71537256240845]
+  [38.988447785159956,485.71537256240845],
+  [36.12120223708309,100.76582908630373],
+  [65.75587372557506,191.02684020996094],
+  [64.0965074057439,232.20977783203128],
+  [38.87031172465583,282.94444799423223],
+  [-5.333823362859549,432.2448921203614],
+  [-5.315086182369987,482.898817062378],
+  [-38.272309504234414,504.76873397827154],
+  [53.02001757953686,365.2067685127259],
+  [53.181234389255614,365.101870726021]
 ]
 
 const zooms = [
@@ -26,7 +35,16 @@ const zooms = [
   17,
   15,
   10,
-  17
+  17,
+  14,
+  11,
+  10,
+  16,
+  14,
+  15,
+  16,
+  16,
+  14
 ]
 
 let savedLocation = localStorage.getItem("location");
@@ -45,6 +63,8 @@ L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.
 setInterval(() => {
   let location = map.getCenter();
   location = `${location.lat},${location.lng}`;
+
+  console.log(location, map.getZoom());
 
   localStorage.setItem("location", location);
   localStorage.setItem("zoom", map.getZoom());
@@ -167,7 +187,7 @@ document.addEventListener("keyup", (e) => {
 
   if(e.key == " "){
     screenshotMode();
-  }    
+  }
 })
 
 function screenshotMode() {

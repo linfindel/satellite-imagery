@@ -117,8 +117,8 @@ function imagerySourceSidebar() {
       <h1>Imagery source</h1>
 
       <div class="column">
-        <button onclick="setImagery('esri-clarity')">Esri Clarity Beta</button>
-        <button onclick="setImagery('esri')">Esri</button>
+        <button id="esri-clarity" onclick="setImagery('esri-clarity')">Esri Clarity Beta</button>
+        <button id="esri" onclick="setImagery('esri')">Esri</button>
       </div>
     `;
 
@@ -132,6 +132,20 @@ function imagerySourceSidebar() {
     });
   }
 }
+
+setInterval(() => {
+  if (document.getElementById("sidebar")) {
+    if (localStorage.getItem("imagery") == "esri") {
+      document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    }
+
+    else {
+      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    }
+  }
+}, 100);
 
 function setPointerEvents(value) {
   document.getElementById("reset").style.pointerEvents = value;
@@ -159,6 +173,10 @@ document.addEventListener("keyup", (e) => {
 function screenshotMode() {
   if (document.getElementById("bottom-row").style.opacity == 1) {
     document.getElementById("bottom-row").style.opacity = 0;
+    
+    if (document.getElementById("sidebar")) {
+      document.getElementById("sidebar").style.opacity = 0;
+    }
 
     setPointerEvents("none");
 
@@ -185,6 +203,10 @@ function screenshotMode() {
 
   else {
     document.getElementById("bottom-row").style.opacity = 1;
+
+    if (document.getElementById("sidebar")) {
+      document.getElementById("sidebar").style.opacity = 1;
+    }
 
     setPointerEvents("all");
   }

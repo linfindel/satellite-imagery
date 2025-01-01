@@ -58,9 +58,17 @@ if (savedLocation != null) {
 const randomLocationID = Math.floor(Math.random() * locationSelection.length);
 
 const map = L.map('map').setView(savedLocation || locationSelection[randomLocationID], localStorage.getItem("zoom") || zooms[randomLocationID] || 14);
-L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-  maxZoom: 22,
-}).addTo(map);
+if (localStorage.getItem("imagery") != "custom") {
+  L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    maxZoom: 22,
+  }).addTo(map); 
+}
+
+else {
+  L.tileLayer(localStorage.getItem("custom-imagery"), {
+    maxZoom: 22,
+  }).addTo(map); 
+}
 
 setInterval(() => {
   let location = map.getCenter();
@@ -141,6 +149,7 @@ function imagerySourceSidebar() {
       <div class="column">
         <button id="esri-clarity" onclick="setImagery('esri-clarity')">Esri Clarity Beta</button>
         <button id="esri" onclick="setImagery('esri')">Esri</button>
+        <input id="custom" onchange="setImagery('custom')" onclick="setImagery('custom')" placeholder="Custom tileset URL">
       </div>
     `;
 
@@ -148,6 +157,10 @@ function imagerySourceSidebar() {
     sidebar.style.transition = "0.25s ease";
 
     document.body.appendChild(sidebar);
+
+    if (localStorage.getItem("custom-imagery")) {
+      document.getElementById("custom").value = localStorage.getItem("custom-imagery");
+    }
 
     setTimeout(() => {
       sidebar.style.opacity = "1";
@@ -160,10 +173,18 @@ setInterval(() => {
     if (localStorage.getItem("imagery") == "esri") {
       document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
       document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    }
+
+    else if (localStorage.getItem("imagery") == "esri-clarity" || !localStorage.getItem("imagery")) {
+      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
     }
 
     else {
-      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
       document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
     }
   }
@@ -176,9 +197,19 @@ function setPointerEvents(value) {
 }
 
 function setImagery(imagery) {
-  L.tileLayer(imagerySources[imagery], {
-    maxZoom: 22,
-  }).addTo(map);
+  if (imagery != "custom") {
+    L.tileLayer(imagerySources[imagery], {
+      maxZoom: 22,
+    }).addTo(map);
+  }
+
+  else {
+    localStorage.setItem("custom-imagery", document.getElementById("custom").value);
+
+    L.tileLayer(localStorage.getItem("custom-imagery"), {
+      maxZoom: 22,
+    }).addTo(map);
+  }
 
   localStorage.setItem("imagery", imagery)
 }

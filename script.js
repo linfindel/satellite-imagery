@@ -4,27 +4,27 @@ const imagerySources = {
 }
 
 const locationSelection = [
-  [-3.309120512165984,-60.220870971679695],
-  [21.152716314425867,-11.393508911132812],
-  [21.934884992425484,89.40656661987306],
-  [-6.6156712302649225,142.85076141357425],
-  [-25.45074229846076,152.93979559923332],
-  [21.626767700868484,276.8094420433045],
-  [55.345574754808545,358.3884376528723],
-  [40.82087324226509,374.4262504577637],
-  [26.174542758741925,416.3131713867188],
-  [38.988447785159956,485.71537256240845],
-  [36.12120223708309,100.76582908630373],
-  [65.75587372557506,191.02684020996094],
-  [64.0965074057439,232.20977783203128],
-  [38.87031172465583,282.94444799423223],
-  [-5.333823362859549,432.2448921203614],
-  [-5.315086182369987,482.898817062378],
-  [-38.272309504234414,504.76873397827154],
-  [53.02001757953686,365.2067685127259],
-  [53.181234389255614,365.101870726021],
-  [16.06292873127318,-319.94183063507086]
-]
+  [-3.309120512165984, -60.220870971679695],
+  [21.152716314425867, -11.393508911132812],
+  [21.934884992425484, 89.40656661987306],
+  [-6.6156712302649225, 142.85076141357425],
+  [-25.45074229846076, 152.93979559923332],
+  [21.626767700868484, 276.8094420433045 - 360],
+  [55.345574754808545, 358.3884376528723 - 360],
+  [40.82087324226509, 374.4262504577637 - 360],
+  [26.174542758741925, 416.3131713867188 - 360],
+  [38.988447785159956, 485.71537256240845 - 360],
+  [36.12120223708309, 100.76582908630373],
+  [65.75587372557506, 191.02684020996094 - 360],
+  [64.0965074057439, 232.20977783203128 - 360],
+  [38.87031172465583, 282.94444799423223 - 360],
+  [-5.333823362859549, 432.2448921203614 - 360],
+  [-5.315086182369987, 482.898817062378 - 360],
+  [-38.272309504234414, 504.76873397827154 - 360],
+  [53.02001757953686, 365.2067685127259 - 360],
+  [53.181234389255614, 365.101870726021 - 360],
+  [16.06292873127318, -319.94183063507086 + 360]
+];
 
 const zooms = [
   14,
@@ -47,7 +47,9 @@ const zooms = [
   16,
   14,
   15
-]
+];
+
+let geoJSONStyle = {};
 
 let savedLocation = localStorage.getItem("location");
 if (savedLocation != null) {
@@ -61,13 +63,13 @@ const map = L.map('map').setView(savedLocation || locationSelection[randomLocati
 if (localStorage.getItem("imagery") != "custom") {
   L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 22,
-  }).addTo(map); 
+  }).addTo(map);
 }
 
 else {
   L.tileLayer(localStorage.getItem("custom-imagery"), {
     maxZoom: 22,
-  }).addTo(map); 
+  }).addTo(map);
 }
 
 setInterval(() => {
@@ -109,9 +111,9 @@ function resetModal() {
 
 function reset() {
   localStorage.clear();
-  
+
   document.getElementById("reset-modal").style.opacity = "0";
-  
+
   setTimeout(() => {
     location.reload()
   }, 250);
@@ -130,7 +132,7 @@ function cancelReset() {
 function imagerySourceSidebar() {
   if (document.getElementById("sidebar")) {
     document.getElementById("sidebar").style.opacity = "0";
-    document.getElementById("imagery").innerText = "Imagery source";
+    document.getElementById("imagery").innerText = "Settings";
 
     setTimeout(() => {
       document.getElementById("sidebar").remove();
@@ -150,6 +152,16 @@ function imagerySourceSidebar() {
         <button id="esri-clarity" onclick="setImagery('esri-clarity')">Esri Clarity Beta</button>
         <button id="esri" onclick="setImagery('esri')">Esri</button>
         <input id="custom" onchange="setImagery('custom')" onclick="setImagery('custom')" placeholder="Custom tileset URL">
+      </div>
+
+      <h1>GeoJSON</h1>
+
+      <div class="column">
+        <input oninput="updateGeoJSONStyle()" id="geojson-colour" type="text" placeholder="Colour">
+        <input oninput="updateGeoJSONStyle()" id="geojson-weight" type="number" placeholder="Weight">
+        <input oninput="updateGeoJSONStyle()" id="geojson-opacity" type="number" placeholder="Opacity">
+        <hr style="width: 100%; border-color: rgba(0, 0, 0, 0.25);">
+        <button id="upload-geojson" onclick="uploadGeoJSON()">Upload GeoJSON file</button>
       </div>
     `;
 
@@ -218,7 +230,7 @@ document.addEventListener("keyup", (e) => {
   e.preventDefault();
   e.key = e.key.toLowerCase();
 
-  if(e.key == " "){
+  if (e.key == " ") {
     screenshotMode();
   }
 })
@@ -226,7 +238,7 @@ document.addEventListener("keyup", (e) => {
 function screenshotMode() {
   if (document.getElementById("bottom-row").style.opacity == 1) {
     document.getElementById("bottom-row").style.opacity = 0;
-    
+
     if (document.getElementById("sidebar")) {
       document.getElementById("sidebar").style.opacity = 0;
     }
@@ -262,5 +274,32 @@ function screenshotMode() {
     }
 
     setPointerEvents("all");
+  }
+}
+
+function uploadGeoJSON() {
+  let input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".geojson";
+  input.onchange = () => {
+    let file = input.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function (event) {
+          const geojsonData = JSON.parse(event.target.result);
+          L.geoJSON(geojsonData, {style: geoJSONStyle}).addTo(map);
+      };
+      reader.readAsText(file);
+    }
+  }
+
+  input.click();
+}
+
+function updateGeoJSONStyle() {
+  geoJSONStyle = {
+    "color": document.getElementById("geojson-colour").value,
+    "weight": document.getElementById("geojson-weight").value,
+    "opacity": document.getElementById("geojson-opacity").value
   }
 }

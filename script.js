@@ -72,6 +72,15 @@ else {
   }).addTo(map);
 }
 
+function updateCoords(e) {
+  const lat = e.latlng.lat.toFixed(5);
+  const lng = e.latlng.lng.toFixed(5);
+  const coordsString = `${lat}, ${lng}`;
+  document.getElementById('coords').value = coordsString;
+}
+
+map.on('mousemove', updateCoords);
+
 setInterval(() => {
   let location = map.getCenter();
   location = `${location.lat},${location.lng}`;
@@ -301,5 +310,83 @@ function updateGeoJSONStyle() {
     "color": document.getElementById("geojson-colour").value,
     "weight": document.getElementById("geojson-weight").value,
     "opacity": document.getElementById("geojson-opacity").value
+  }
+}
+
+function goToCoords() {
+  const coords = document.getElementById("coords").value;
+
+  if (coords.match(/^-?\d+\.\d+,\s*-?\d+\.\d+$/)) {
+    let coordsParts = coords.split(",");
+    map.setView([coordsParts[0], coordsParts[1]], 14);
+  }
+
+  else if (coords.match(/^([-+]?\d+\.\d+)°([NS]),\s*([-+]?\d+\.\d+)°([EW])$/)) {
+    const match = coords.match(/^([-+]?\d+\.\d+)°([NS]),\s*([-+]?\d+\.\d+)°([EW])$/);
+    
+    const lat = parseFloat(match[1]);
+    const latDirection = match[2];
+
+    const lon = parseFloat(match[3]);
+    const lonDirection = match[4];
+
+    const decimalLat = latDirection === 'N' ? lat : -lat;
+    const decimalLon = lonDirection === 'E' ? lon : -lon;
+
+    map.setView([decimalLat, decimalLon], 14);
+  }
+
+  else if (coords.match(/^(\d{1,3})°(\d{1,2})'(\d{1,2})"([NSEW])\s*,\s*(\d{1,3})°(\d{1,2})'(\d{1,2})"([NSEW])$/)) {
+    const match = coords.match(/^(\d{1,3})°(\d{1,2})'(\d{1,2})"([NSEW])\s*,\s*(\d{1,3})°(\d{1,2})'(\d{1,2})"([NSEW])$/);
+
+    const latDegrees = parseInt(match[1]);
+    const latMinutes = parseInt(match[2]);
+    const latSeconds = parseInt(match[3]);
+    const latDirection = match[4];
+
+    const lonDegrees = parseInt(match[5]);
+    const lonMinutes = parseInt(match[6]);
+    const lonSeconds = parseInt(match[7]);
+    const lonDirection = match[8];
+
+    const latitude = latDegrees + (latMinutes / 60) + (latSeconds / 3600);
+    const longitude = lonDegrees + (lonMinutes / 60) + (lonSeconds / 3600);
+
+    const finalLatitude = latDirection === 'S' ? -latitude : latitude;
+    const finalLongitude = lonDirection === 'W' ? -longitude : longitude;
+
+    map.setView([finalLatitude, finalLongitude], 14);
+  }
+
+  else if (coords.match(/^(\d{1,2})°(\d{1,2}\.\d{1,2})'([NS]),\s*(\d{1,3})°(\d{1,2}\.\d{1,2})'([EW])$/)) {
+    const match = coords.match(/^(\d{1,2})°(\d{1,2}\.\d{1,2})'([NS]),\s*(\d{1,3})°(\d{1,2}\.\d{1,2})'([EW])$/);
+
+    const latDegrees = parseFloat(match[1]);
+    const latMinutes = parseFloat(match[2]);
+    const latDirection = match[3];
+
+    const lonDegrees = parseFloat(match[4]);
+    const lonMinutes = parseFloat(match[5]);
+    const lonDirection = match[6];
+
+    let decimalLat = latDegrees + (latMinutes / 60);
+    let decimalLon = lonDegrees + (lonMinutes / 60);
+
+    if (latDirection === 'S') {
+        decimalLat *= -1;
+    }
+    if (lonDirection === 'W') {
+        decimalLon *= -1;
+    }
+
+    map.setView([decimalLat, decimalLon], 14);
+  }
+
+  else if (coords == "") {
+   // 
+  }
+
+  else {
+    alert("Invalid coordinates");
   }
 }

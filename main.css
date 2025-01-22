@@ -59,6 +59,9 @@ button:hover, .interactive:hover {
   background-color: rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(10px);
 
+  display: flex;
+  flex-direction: column;
+
   padding: 1rem;
 
   position: absolute;

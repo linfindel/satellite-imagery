@@ -173,7 +173,7 @@ function imagerySourceSidebar() {
         <button id="upload-geojson" onclick="uploadGeoJSON()">Upload GeoJSON file</button>
       </div>
 
-      <p style="margin-top: auto;">Made with <img src="blobcat.png" style="height: 2.5rem; transform: translateY(0.5rem)"> by <a href="https://linfindel.github.io" target="_blank">Cirilla</a></p>
+      <p style="margin-top: auto;">Made with <img src="blobcat.png" alt="A cute illustrated cat holding a large heart" style="height: 2.5rem; transform: translateY(0.5rem)"> by <a href="https://linfindel.github.io" target="_blank">Cirilla</a></p>
     `;
 
     sidebar.style.opacity = "0";

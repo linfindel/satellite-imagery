@@ -163,6 +163,10 @@ function imagerySourceSidebar() {
         <input id="custom" onchange="setImagery('custom')" onclick="setImagery('custom')" placeholder="Custom tileset URL">
       </div>
 
+      <p></p>
+      
+      <button id="borders" onclick="toggleBorders()">${borders == null ? "Show borders" : "Hide borders"}</button>
+
       <h1>GeoJSON</h1>
 
       <div class="column">
@@ -390,5 +394,28 @@ function goToCoords() {
 
   else {
     alert("Invalid coordinates");
+  }
+}
+
+let bordersGeoJSON;
+let borders;
+
+fetch("countries.geojson")
+.then(response => response.json())
+.then(data => {
+  bordersGeoJSON = data;
+})
+
+function toggleBorders() {
+  if (borders == null) {
+    borders = L.geoJSON(bordersGeoJSON).addTo(map);
+    document.getElementById("borders").innerText = "Hide borders";
+  }
+
+  else {
+    borders.remove()
+    borders = null;
+
+    document.getElementById("borders").innerText = "Show borders";
   }
 }

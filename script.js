@@ -408,7 +408,7 @@ fetch("countries.geojson")
 
 function toggleBorders() {
   if (borders == null) {
-    borders = L.geoJSON(bordersGeoJSON).addTo(map);
+    borders = L.geoJSON(bordersGeoJSON, {style: {color: "#ffffff", fillColor: "transparent", weight: 2.5}}).addTo(map);
     document.getElementById("borders").innerText = "Hide borders";
   }
 

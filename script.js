@@ -253,6 +253,7 @@ document.addEventListener("keyup", (e) => {
 function screenshotMode() {
   if (document.getElementById("bottom-row").style.opacity == 1) {
     document.getElementById("bottom-row").style.opacity = 0;
+    document.getElementById("coords").style.opacity = 0;
 
     if (document.getElementById("sidebar")) {
       document.getElementById("sidebar").style.opacity = 0;
@@ -283,6 +284,7 @@ function screenshotMode() {
 
   else {
     document.getElementById("bottom-row").style.opacity = 1;
+    document.getElementById("coords").style.opacity = 1;
 
     if (document.getElementById("sidebar")) {
       document.getElementById("sidebar").style.opacity = 1;

@@ -1,6 +1,8 @@
 const imagerySources = {
   "esri-clarity": "https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-  "esri": "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
+  "esri": "https://server.arcgisonline.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+  "google-satellite": "https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}",
+  "google-hybrid": "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"
 }
 
 const locationSelection = [
@@ -160,6 +162,8 @@ function imagerySourceSidebar() {
       <div class="column">
         <button id="esri-clarity" onclick="setImagery('esri-clarity')">Esri Clarity Beta</button>
         <button id="esri" onclick="setImagery('esri')">Esri</button>
+        <button id="google-satellite" onclick="setImagery('google-satellite')">Google Satellite</button>
+        <button id="google-hybrid" onclick="setImagery('google-hybrid')">Google Hybrid</button>
         <input id="custom" onchange="setImagery('custom')" onclick="setImagery('custom')" placeholder="Custom tileset URL">
       </div>
 
@@ -200,12 +204,32 @@ setInterval(() => {
     if (localStorage.getItem("imagery") == "esri") {
       document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
       document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("google-hybrid").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("google-satellite").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
       document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
     }
 
     else if (localStorage.getItem("imagery") == "esri-clarity" || !localStorage.getItem("imagery")) {
       document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
       document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("google-hybrid").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("google-satellite").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    }
+
+    else if (localStorage.getItem("imagery") == "google-satellite") {
+      document.getElementById("google-satellite").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("google-hybrid").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    }
+
+    else if (localStorage.getItem("imagery") == "google-hybrid") {
+      document.getElementById("google-hybrid").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
+      document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+      document.getElementById("google-satellite").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
       document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
     }
 

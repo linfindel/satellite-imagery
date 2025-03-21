@@ -225,6 +225,8 @@ function setImagery(imagery) {
   if (imagery != "custom") {
     L.tileLayer(imagerySources[imagery], {
       maxZoom: 22,
+      minZoom: 3,
+      noWrap: true
     }).addTo(map);
   }
 
@@ -233,6 +235,8 @@ function setImagery(imagery) {
 
     L.tileLayer(localStorage.getItem("custom-imagery"), {
       maxZoom: 22,
+      minZoom: 3,
+      noWrap: true
     }).addTo(map);
   }
 

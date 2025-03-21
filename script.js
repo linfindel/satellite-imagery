@@ -51,6 +51,7 @@ const zooms = [
   15
 ];
 
+let bordersGeoJSON = null;
 let geoJSONStyle = {};
 
 let savedLocation = localStorage.getItem("location");
@@ -169,7 +170,7 @@ function imagerySourceSidebar() {
 
       <p></p>
       
-      <button id="borders" onclick="toggleBorders()">${borders == null ? "Show borders" : "Hide borders"}</button>
+      <button ${bordersGeoJSON == null ? "disabled" : ""} id="borders" onclick="toggleBorders()">${bordersGeoJSON == null ? "Downloading borders..." : (borders == null ? "Show borders" : "Hide borders")}</button>
 
       <h1>GeoJSON</h1>
 
@@ -237,6 +238,11 @@ setInterval(() => {
       document.getElementById("custom").style.backgroundColor = "rgba(0, 0, 0, 0.5)";
       document.getElementById("esri-clarity").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
       document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
+    }
+
+    if (bordersGeoJSON != null) {
+      document.getElementById("borders").innerText = borders == null ? "Show borders" : "Hide borders";
+      document.getElementById("borders").removeAttribute("disabled");
     }
   }
 }, 100);
@@ -423,7 +429,6 @@ function goToCoords() {
   }
 }
 
-let bordersGeoJSON;
 let borders;
 
 fetch("countries.geojson")

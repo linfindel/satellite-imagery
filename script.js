@@ -51,7 +51,9 @@ const zooms = [
   15
 ];
 
+let borders = null;
 let bordersGeoJSON = null;
+let borderStreamPercentage = 0;
 let geoJSONStyle = {};
 
 let savedLocation = localStorage.getItem("location");
@@ -240,9 +242,19 @@ setInterval(() => {
       document.getElementById("esri").style.backgroundColor = "rgba(0, 0, 0, 0.25)";
     }
 
-    if (bordersGeoJSON != null) {
-      document.getElementById("borders").innerText = borders == null ? "Show borders" : "Hide borders";
-      document.getElementById("borders").removeAttribute("disabled");
+    try {
+      if (bordersGeoJSON != null) {
+        document.getElementById("borders").innerText = borders == null ? "Show borders" : "Hide borders";
+        document.getElementById("borders").removeAttribute("disabled");
+      }
+  
+      else {
+        document.getElementById("borders").innerText = `Downloading borders... ${borderStreamPercentage}%`;
+      }
+    }
+
+    catch {
+      //
     }
   }
 }, 100);
@@ -429,13 +441,53 @@ function goToCoords() {
   }
 }
 
-let borders;
+const geoJsonStream = new ReadableStream({
+  async start(controller) {
+    try {
+      const response = await fetch("countries.geojson");
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
 
-fetch("countries.geojson")
-.then(response => response.json())
-.then(data => {
-  bordersGeoJSON = data;
-})
+      const contentLength = response.headers.get("Content-Length");
+      const totalBytes = contentLength ? parseInt(contentLength, 10) : null;
+      let loadedBytes = 0;
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder("utf-8");
+      let chunks = [];
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        loadedBytes += value.length;
+        if (totalBytes) {
+          borderStreamPercentage = Math.round((loadedBytes / totalBytes) * 100);
+        }
+
+        chunks.push(decoder.decode(value, { stream: true }));
+        controller.enqueue(value);
+      }
+
+      bordersGeoJSON = JSON.parse(chunks.join(''));
+      controller.close();
+    } catch (error) {
+      controller.error(error);
+    }
+  }
+});
+
+const reader = geoJsonStream.getReader();
+reader.read().then(function processText({ done, value }) {
+  if (done) {
+    console.log("Finished reading the borders GeoJSON stream");
+    return;
+  }
+
+  return reader.read().then(processText);
+});
+
 
 function toggleBorders() {
   if (borders == null) {

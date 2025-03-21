@@ -5,44 +5,6 @@ const imagerySources = {
   "google-hybrid": "https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}"
 }
 
-const locationSelection = [
-  [-3.309120512165984, -60.220870971679695],
-  [21.152716314425867, -11.393508911132812],
-  [21.934884992425484, 89.40656661987306],
-  [-6.6156712302649225, 142.85076141357425],
-  [-25.45074229846076, 152.93979559923332],
-  [21.626767700868484, 276.8094420433045 - 360],
-  [55.345574754808545, 358.3884376528723 - 360],
-  [36.12120223708309, 100.76582908630373],
-  [65.75587372557506, 191.02684020996094 - 360],
-  [64.0965074057439, 232.20977783203128 - 360],
-  [38.87031172465583, 282.94444799423223 - 360],
-  [16.06292873127318, -319.94183063507086 + 360]
-];
-
-const zooms = [
-  14,
-  11,
-  14,
-  12,
-  14,
-  17,
-  17,
-  15,
-  10,
-  17,
-  14,
-  11,
-  10,
-  16,
-  14,
-  15,
-  16,
-  16,
-  14,
-  15
-];
-
 let borders = null;
 let bordersGeoJSON = null;
 let borderStreamPercentage = 0;
@@ -54,9 +16,7 @@ if (savedLocation != null) {
   savedLocation = [Number(savedLocation[0]), Number(savedLocation[1])];
 }
 
-const randomLocationID = Math.floor(Math.random() * locationSelection.length);
-
-const map = L.map('map').setView(savedLocation || locationSelection[randomLocationID], localStorage.getItem("zoom") || zooms[randomLocationID] || 14);
+const map = L.map('map').setView(savedLocation || [20, 0], localStorage.getItem("zoom") || 3);
 if (localStorage.getItem("imagery") != "custom") {
   L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 22,

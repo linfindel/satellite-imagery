@@ -17,9 +17,12 @@ if (savedLocation != null) {
 }
 
 const map = L.map('map').setView(savedLocation || [20, 0], localStorage.getItem("zoom") || 3);
+map.setMaxBounds([[85, 180], [-85, -180]]);
+console.log(map.getBounds());
 if (localStorage.getItem("imagery") != "custom") {
   L.tileLayer(imagerySources[localStorage.getItem("imagery")] || 'https://clarity.maptiles.arcgis.com/arcgis/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
     maxZoom: 22,
+    minZoom: 3,
     noWrap: true
   }).addTo(map);
 }
